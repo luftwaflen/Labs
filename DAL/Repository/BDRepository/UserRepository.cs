@@ -1,5 +1,6 @@
 ﻿using DAL.Entities;
 using DAL.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -8,7 +9,10 @@ namespace DAL.Repository.BDRepository
 {
     public class UserRepository : IRepository<User>
     {
-        private string _connectionString = ConfigurationManager.ConnectionStrings["TaskManagerDB"].ConnectionString;
+        private ConfigurationBuilder _configuration = new ConfigurationBuilder()
+            .AddJsonFile("configuration.json")
+            .Build();
+        //private string _connectionString = ConfigurationManager.ConnectionStrings["TaskManagerDB"].ConnectionString;
         public void Add(User entity)
         {
             string sqlExpression = "INSERT INTO User (Name, Login, Password) VALUES (@name, @login, @password)";
