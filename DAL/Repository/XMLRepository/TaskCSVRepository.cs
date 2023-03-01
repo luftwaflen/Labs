@@ -1,12 +1,11 @@
-﻿
-using DAL.Entities;
-using DAL.Repository.Interfaces;
+﻿using DAL.Repository.Interfaces;
+using Task = DAL.Entities.Task;
 
 namespace DAL.Repository.XMLRepository
 {
-    public class TaskNoteXMLRepository : IRepository<TaskNote>
+    public class TaskCSVRepository : IRepository<Task>
     {
-        public void Add(TaskNote entity)
+        public void Add(Task entity)
         {
             throw new NotImplementedException();
         }
@@ -21,17 +20,17 @@ namespace DAL.Repository.XMLRepository
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TaskNote> GetAll()
+        public IEnumerable<Task> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public TaskNote GetById(int id)
+        public Task GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(TaskNote entity)
+        public void Update(Task entity)
         {
             throw new NotImplementedException();
         }

@@ -1,11 +1,20 @@
-﻿using DAL.Repository.Interfaces;
-using Task = DAL.Entities.Task;
+﻿using DAL.Entities;
+using DAL.Repository.Interfaces;
+using System.Xml;
 
 namespace DAL.Repository.XMLRepository
 {
-    public class TaskXMLRepository : IRepository<Task>
+    public class UserCSVRepository : IRepository<User>
     {
-        public void Add(Task entity)
+        string path = "";
+        XmlElement xRoot;
+        public UserCSVRepository()
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load(path);
+            xRoot = xDoc.DocumentElement;
+        }
+        public void Add(User entity)
         {
             throw new NotImplementedException();
         }
@@ -20,17 +29,17 @@ namespace DAL.Repository.XMLRepository
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Task> GetAll()
+        public IEnumerable<User> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task GetById(int id)
+        public User GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(Task entity)
+        public void Update(User entity)
         {
             throw new NotImplementedException();
         }

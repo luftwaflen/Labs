@@ -1,5 +1,6 @@
 ﻿using DAL.Repository.Interfaces;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using Task = DAL.Entities.Task;
 
@@ -111,7 +112,11 @@ namespace DAL.Repository.BDRepository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            SqlConnection connection = new SqlConnection(_connectionString);
+            if (connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
         }
     }
 }

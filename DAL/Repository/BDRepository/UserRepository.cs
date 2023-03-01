@@ -111,7 +111,11 @@ namespace DAL.Repository.BDRepository
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            SqlConnection connection = new SqlConnection(_connectionString);
+            if (connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
         }
     }
 }
