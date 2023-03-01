@@ -1,7 +1,6 @@
 ﻿using DAL.Entities;
 using DAL.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -20,7 +19,6 @@ namespace DAL.Repository.BDRepository
             Configuration projectConfig = config.GetRequiredSection("ConnectionStrings").Get<Configuration>();
             _connectionString = projectConfig.DbString;
         }
-        //private string _connectionString = ConfigurationManager.ConnectionStrings["TaskManagerDB"].ConnectionString;
         public void Add(User entity)
         {
             string sqlExpression = "INSERT INTO User (Name, Login, Password) VALUES (@name, @login, @password)";

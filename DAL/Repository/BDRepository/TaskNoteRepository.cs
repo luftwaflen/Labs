@@ -1,7 +1,6 @@
 ﻿using DAL.Entities;
 using DAL.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
