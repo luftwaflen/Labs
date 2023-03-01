@@ -1,17 +1,25 @@
 ﻿using DAL.Entities;
 using DAL.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
-using System.Configuration;
+using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace DAL.Repository.BDRepository
-{
+{    
     public class UserRepository : IRepository<User>
     {
-        private ConfigurationBuilder _configuration = new ConfigurationBuilder()
-            .AddJsonFile("configuration.json")
-            .Build();
+        private string _connectionString;
+        public UserRepository()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appconfiguration.json")
+                .AddEnvironmentVariables()
+                .Build();
+
+            Configuration projectConfig = config.GetRequiredSection("ConnectionStrings").Get<Configuration>();
+            _connectionString = projectConfig.DbString;
+        }
         //private string _connectionString = ConfigurationManager.ConnectionStrings["TaskManagerDB"].ConnectionString;
         public void Add(User entity)
         {
@@ -90,7 +98,7 @@ namespace DAL.Repository.BDRepository
 
                 SqlParameter idParameter = new SqlParameter("@id", id);
                 command.Parameters.Add(idParameter);
-                
+
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)

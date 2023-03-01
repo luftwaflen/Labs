@@ -1,4 +1,5 @@
 ﻿using DAL.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -8,7 +9,17 @@ namespace DAL.Repository.BDRepository
 {
     public class TaskRepository : IRepository<Task>
     {
-        private string _connectionString = ConfigurationManager.ConnectionStrings["TaskManagerDB"].ConnectionString;
+        private string _connectionString;
+        public TaskRepository()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appconfiguration.json")
+                .AddEnvironmentVariables()
+                .Build();
+
+            Configuration projectConfig = config.GetRequiredSection("ConnectionStrings").Get<Configuration>();
+            _connectionString = projectConfig.DbString;
+        }
         public void Add(Task entity)
         {
             string sqlExpression = "INSERT INTO Task (Name, Description) VALUES (@name, @description)";

@@ -1,0 +1,8 @@
+{
+  "ConnectionStrings": {
+    "DbString": "1111",
+    "UserCsv": "user2222",
+    "TaskCsv": "task3333",
+    "TaskNoteCsv": "taskNote4444"
+  }
+}
