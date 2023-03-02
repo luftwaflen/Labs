@@ -17,6 +17,7 @@ namespace WinFormsPresentation
         private void button_User_GetAll_Click(object sender, EventArgs e)
         {
             var users = _userService.GetAll();
+            dataGridView_User.Rows.Clear();
             InitUserDataGridView(users);
         }
         private void InitUserDataGridView(IEnumerable<User> users)
@@ -33,10 +34,25 @@ namespace WinFormsPresentation
 
         private void button_User_GetId_Click(object sender, EventArgs e)
         {
-            int id = int.Parse(textBox_UserId.Text);
-            var user = _userService.GetById(id);
-            List<User> tmp = new List<User> { user };
-            InitUserDataGridView(tmp);
+            try
+            {
+                var id = int.Parse(textBox_UserId.Text);
+                try
+                {
+                    var user = _userService.GetById(id);
+                    List<User> tmp = new List<User> { user };
+                    dataGridView_User.Rows.Clear();
+                    InitUserDataGridView(tmp);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Неверный id");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Введите Id");
+            }
         }
 
         private void button_User_Update_Click(object sender, EventArgs e)
@@ -62,6 +78,7 @@ namespace WinFormsPresentation
         private void button_Task_GetAll_Click(object sender, EventArgs e)
         {
             var tasks = _taskService.GetAll();
+            dataGridView_Task.Rows.Clear();
             InitTaskDataGridView(tasks);
         }
         private void InitTaskDataGridView(IEnumerable<Task> tasks)
@@ -82,6 +99,7 @@ namespace WinFormsPresentation
             var id = int.Parse(textBox_TaskId.Text);
             var task = _taskService.GetById(id);
             List<Task> tmp = new List<Task> { task };
+            dataGridView_Task.Rows.Clear();
             InitTaskDataGridView(tmp);
         }
 
@@ -95,10 +113,24 @@ namespace WinFormsPresentation
 
         private void button_Task_Insert_Click(object sender, EventArgs e)
         {
-            var id = int.Parse(textBox_TaskId.Text);
-            var name = textBox_TaskName.Text;
-            var description = textBox_TaskDescription.Text;
-            _taskService.Add(id, name, description);
+            //var id = int.Parse(textBox_TaskId.Text);
+            try
+            {
+                var name = textBox_TaskName.Text;
+                try
+                {
+                    var description = textBox_TaskDescription.Text;
+                    _taskService.Add(0, name, description);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Input description");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Input name");
+            }
         }
 
         private void button_Task_Delete_Click(object sender, EventArgs e)
@@ -111,6 +143,7 @@ namespace WinFormsPresentation
         private void button_TaskNote_GetAll_Click(object sender, EventArgs e)
         {
             var taskNotes = _taskNoteService.GetAll();
+            dataGridView_TaskNote.Rows.Clear();
             InitTaskNoteDataGridView(taskNotes);
         }
         private void InitTaskNoteDataGridView(IEnumerable<TaskNote> taskNotes)
@@ -133,6 +166,7 @@ namespace WinFormsPresentation
         private void button_TaskNote_GetId_Click(object sender, EventArgs e)
         {
             var id = int.Parse(textBox_TNTaskId.Text);
+            dataGridView_TaskNote.Rows.Clear();
             _taskNoteService.GetById(id);
         }
 

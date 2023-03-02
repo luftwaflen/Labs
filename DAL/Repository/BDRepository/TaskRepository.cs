@@ -21,7 +21,7 @@ namespace DAL.Repository.BDRepository
         }
         public void Add(Task entity)
         {
-            string sqlExpression = "INSERT INTO Task (Name, Description) VALUES (@name, @description)";
+            string sqlExpression = "INSERT INTO Task (Task.Name, Task.Description) VALUES (@name, @description)";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -38,7 +38,7 @@ namespace DAL.Repository.BDRepository
 
         public void Delete(int id)
         {
-            string sqlExpression = "DELETE FROM Task WHERE (User.Id) = @id";
+            string sqlExpression = "DELETE FROM Task WHERE (Task.Id) = @id";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -87,7 +87,7 @@ namespace DAL.Repository.BDRepository
         public Task GetById(int id)
         {
             Task task = new Task();
-            string sqlExpression = "SELECT * From Task WHERE (User.Id) = @id";
+            string sqlExpression = "SELECT * From Task WHERE (Task.Id) = @id";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -107,7 +107,7 @@ namespace DAL.Repository.BDRepository
                     }
                     else
                     {
-                        task = null;
+                        throw new Exception("Wrong Id");
                     }
                 }
             }

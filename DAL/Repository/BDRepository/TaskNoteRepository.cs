@@ -21,7 +21,7 @@ namespace DAL.Repository.BDRepository
         }
         public void Add(TaskNote entity)
         {
-            string sqlExpression = "INSERT INTO TaskNote (AppointerId, ExecutorId, TaskId)" +
+            string sqlExpression = "INSERT INTO TaskNote (TaskNote.AppointerId, TaskNote.ExecutorId, TaskNote.TaskId)" +
                 "VALUES (@appointerId, @executorId, @taskId)";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -113,7 +113,7 @@ namespace DAL.Repository.BDRepository
                     }
                     else
                     {
-                        taskNote = null;
+                        throw new Exception("Wrong Id");
                     }
                 }
             }

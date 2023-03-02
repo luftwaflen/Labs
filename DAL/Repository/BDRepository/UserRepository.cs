@@ -21,7 +21,7 @@ namespace DAL.Repository.BDRepository
         }
         public void Add(User entity)
         {
-            string sqlExpression = "INSERT INTO User (Name, Login, Password) VALUES (@name, @login, @password)";
+            string sqlExpression = "INSERT INTO [User] ([User].Name, [User].Login, [User].Password) VALUES (@name, @login, @password)";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -40,7 +40,7 @@ namespace DAL.Repository.BDRepository
 
         public void Delete(int id)
         {
-            string sqlExpression = "DELETE FROM User WHERE (User.Id) = @id";
+            string sqlExpression = "DELETE FROM [User] WHERE ([User].Id) = @id";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -56,7 +56,7 @@ namespace DAL.Repository.BDRepository
         public IEnumerable<User> GetAll()
         {
             List<User> users = new List<User>();
-            string sqlExpression = "SELECT * From User";
+            string sqlExpression = "SELECT * From [User]";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -87,7 +87,7 @@ namespace DAL.Repository.BDRepository
         public User GetById(int id)
         {
             User user = new User();
-            string sqlExpression = "SELECT * From User WHERE (User.Id) = @id";
+            string sqlExpression = "SELECT * From [User] WHERE ([User].Id) = @id";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -101,12 +101,15 @@ namespace DAL.Repository.BDRepository
                 {
                     if (reader.HasRows)
                     {
-                        user.Id = reader.GetInt32(0);
-                        user.Name = reader.GetString(1);
+                        while (reader.Read())
+                        {
+                            user.Id = reader.GetInt32(0);
+                            user.Name = reader.GetString(1);
+                        }                        
                     }
                     else
                     {
-                        user = null;
+                        throw new Exception("Wrong Id");
                     }
                 }
             }

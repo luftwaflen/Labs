@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "DbString": "1111",
+    "DbString": "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\PROGA\\IGI\\Labs\\DAL\\TaskManagerDB.mdf;Integrated Security=True",
     "UserCsv": "user2222",
     "TaskCsv": "task3333",
     "TaskNoteCsv": "taskNote4444"
