@@ -1,11 +1,17 @@
 ﻿
 using DAL.Entities;
 using DAL.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace DAL.Repository.CSVRepository
 {
-    public class TaskNoteCSVRepository : IRepository<TaskNote>
+    public class TaskNoteCsvRepository : IRepository<TaskNote>
     {
+        private string _path = "";
+        public TaskNoteCsvRepository()
+        {
+            
+        }
         public void Add(TaskNote entity)
         {
             throw new NotImplementedException();

@@ -9,15 +9,9 @@ namespace DAL.Repository.BDRepository
     public class UserRepository : IRepository<User>
     {
         private string _connectionString;
-        public UserRepository()
+        public UserRepository(string connectionString)
         {
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile("appconfiguration.json")
-                .AddEnvironmentVariables()
-                .Build();
-
-            Configuration projectConfig = config.GetRequiredSection("ConnectionStrings").Get<Configuration>();
-            _connectionString = projectConfig.DbString;
+            _connectionString = connectionString;
         }
         public void Add(User entity)
         {

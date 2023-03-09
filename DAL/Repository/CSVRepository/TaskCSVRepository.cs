@@ -1,10 +1,16 @@
 ﻿using DAL.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Task = DAL.Entities.Task;
 
 namespace DAL.Repository.CSVRepository
 {
-    public class TaskCSVRepository : IRepository<Task>
+    public class TaskCsvRepository : IRepository<Task>
     {
+        private string _path;
+        public TaskCsvRepository(string path)
+        {
+            _path = path;
+        }
         public void Add(Task entity)
         {
             throw new NotImplementedException();

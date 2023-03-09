@@ -1,24 +1,53 @@
 using DAL.Entities;
 using Task = DAL.Entities.Task;
 using BLL.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace WinFormsPresentation
 {
     public partial class Form1 : Form
     {
-        private UserService _userService = new UserService();
-        private TaskService _taskService = new TaskService();
-        private TaskNoteService _taskNoteService = new TaskNoteService();
+        private UserService _userService;
+        private TaskService _taskService;
+        private TaskNoteService _taskNoteService;
         public Form1()
         {
             InitializeComponent();
+
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("C:\\PROGA\\IGI\\Labs\\WinFormsPresentation\\configuration.json")
+                .AddEnvironmentVariables()
+                .Build();
+
+            Configuration projectConfig = config.GetRequiredSection("ConnectionStrings").Get<Configuration>();
+            var connectionString = projectConfig.DbString;
+
+            _userService = new UserService(connectionString);
+            _taskService = new TaskService(connectionString);
+            _taskNoteService = new TaskNoteService(connectionString);
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            var users = _userService.GetAll();
+            InitUserDataGridView(users);
+            var tasks = _taskService.GetAll();
+            InitTaskDataGridView(tasks);
+            var taskNotes = _taskNoteService.GetAll();
+            InitTaskNoteDataGridView(taskNotes);
         }
         #region User
         private void button_User_GetAll_Click(object sender, EventArgs e)
         {
-            var users = _userService.GetAll();
-            dataGridView_User.Rows.Clear();
-            InitUserDataGridView(users);
+            try
+            {
+                var users = _userService.GetAll();
+                dataGridView_User.Rows.Clear();
+                InitUserDataGridView(users);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void InitUserDataGridView(IEnumerable<User> users)
         {
@@ -37,49 +66,73 @@ namespace WinFormsPresentation
             try
             {
                 var id = int.Parse(textBox_UserId.Text);
-                try
-                {
-                    var user = _userService.GetById(id);
-                    List<User> tmp = new List<User> { user };
-                    dataGridView_User.Rows.Clear();
-                    InitUserDataGridView(tmp);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Неверный id");
-                }
+                var user = _userService.GetById(id);
+                var tmp = new List<User> { user };
+                dataGridView_User.Rows.Clear();
+                InitUserDataGridView(tmp);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Введите Id");
+                MessageBox.Show(ex.Message);
             }
+
         }
 
         private void button_User_Update_Click(object sender, EventArgs e)
         {
-            int id = int.Parse(textBox_UserId.Text);
-            string name = textBox_UserName.Text;
-            _userService.Update(id, name);
+            try
+            {
+                var id = int.Parse(textBox_UserId.Text);
+                var name = textBox_UserName.Text;
+                _userService.Update(id, name);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button_User_Insert_Click(object sender, EventArgs e)
         {
-            string name = textBox_UserName.Text;
-            _userService.Add(name);
+            try
+            {
+                var name = textBox_UserName.Text;
+                if (name == "")
+                    throw new Exception("Empty name");
+                _userService.Add(name);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button_User_Delete_Click(object sender, EventArgs e)
         {
-            int id = int.Parse(textBox_UserId.Text);
-            _userService.Delete(id);
+            try
+            {
+                var id = int.Parse(textBox_UserId.Text);
+                _userService.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         #endregion
         #region Task
         private void button_Task_GetAll_Click(object sender, EventArgs e)
         {
-            var tasks = _taskService.GetAll();
-            dataGridView_Task.Rows.Clear();
-            InitTaskDataGridView(tasks);
+            try
+            {
+                var tasks = _taskService.GetAll();
+                dataGridView_Task.Rows.Clear();
+                InitTaskDataGridView(tasks);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void InitTaskDataGridView(IEnumerable<Task> tasks)
         {
@@ -96,102 +149,162 @@ namespace WinFormsPresentation
 
         private void button_Task_GetId_Click(object sender, EventArgs e)
         {
-            var id = int.Parse(textBox_TaskId.Text);
-            var task = _taskService.GetById(id);
-            List<Task> tmp = new List<Task> { task };
-            dataGridView_Task.Rows.Clear();
-            InitTaskDataGridView(tmp);
+            try
+            {
+                var id = int.Parse(textBox_TaskId.Text);
+                var task = _taskService.GetById(id);
+                var tmp = new List<Task> { task };
+                dataGridView_Task.Rows.Clear();
+                InitTaskDataGridView(tmp);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button_Task_Update_Click(object sender, EventArgs e)
         {
-            var id = int.Parse(textBox_TaskId.Text);
-            var name = textBox_TaskName.Text;
-            var description = textBox_TaskDescription.Text;
-            _taskService.Update(id, name, description);
+            try
+            {
+                var id = int.Parse(textBox_TaskId.Text);
+                var name = textBox_TaskName.Text;
+                var description = textBox_TaskDescription.Text;
+                if (name == "" || description == "")
+                    throw new Exception("No data");
+                _taskService.Update(id, name, description);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button_Task_Insert_Click(object sender, EventArgs e)
         {
-            //var id = int.Parse(textBox_TaskId.Text);
             try
             {
                 var name = textBox_TaskName.Text;
-                try
-                {
-                    var description = textBox_TaskDescription.Text;
-                    _taskService.Add(0, name, description);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Input description");
-                }
+                var description = textBox_TaskDescription.Text;
+                if (name == "" || description == "")
+                    throw new Exception("No data");
+                _taskService.Add(0, name, description);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Input name");
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void button_Task_Delete_Click(object sender, EventArgs e)
         {
-            var id = int.Parse(textBox_TaskId.Text);
-            _taskService.Delete(id);
+            try
+            {
+                var id = int.Parse(textBox_TaskId.Text);
+                _taskService.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         #endregion
         #region TaskNote
         private void button_TaskNote_GetAll_Click(object sender, EventArgs e)
         {
-            var taskNotes = _taskNoteService.GetAll();
-            dataGridView_TaskNote.Rows.Clear();
-            InitTaskNoteDataGridView(taskNotes);
+            try
+            {
+                var taskNotes = _taskNoteService.GetAll();
+                dataGridView_TaskNote.Rows.Clear();
+                InitTaskNoteDataGridView(taskNotes);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void InitTaskNoteDataGridView(IEnumerable<TaskNote> taskNotes)
         {
-            dataGridView_Task.ColumnCount = 4;
-            dataGridView_Task.Columns[0].Name = "Id";
-            dataGridView_Task.Columns[1].Name = "Task Id";
-            dataGridView_Task.Columns[2].Name = "Appointer Id";
-            dataGridView_Task.Columns[3].Name = "Executor Id";
+            dataGridView_TaskNote.ColumnCount = 4;
+            dataGridView_TaskNote.Columns[0].Name = "Id";
+            dataGridView_TaskNote.Columns[1].Name = "Task Id";
+            dataGridView_TaskNote.Columns[2].Name = "Appointer Id";
+            dataGridView_TaskNote.Columns[3].Name = "Executor Id";
             foreach (var taskNote in taskNotes)
             {
                 string[] str = { taskNote.Id.ToString(),
                     taskNote.TaskId.ToString(),
                     taskNote.AppointerId.ToString(),
                     taskNote.ExecutorId.ToString() };
-                dataGridView_Task.Rows.Add(str);
+                dataGridView_TaskNote.Rows.Add(str);
             }
         }
 
         private void button_TaskNote_GetId_Click(object sender, EventArgs e)
         {
-            var id = int.Parse(textBox_TNTaskId.Text);
-            dataGridView_TaskNote.Rows.Clear();
-            _taskNoteService.GetById(id);
+            try
+            {
+                var id = int.Parse(textBox_TaskNoteId.Text);
+                dataGridView_TaskNote.Rows.Clear();
+                List<TaskNote> notes = new List<TaskNote>();
+                notes.Add(_taskNoteService.GetById(id));
+                InitTaskNoteDataGridView(notes);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }            
         }
 
         private void button_TaskNote_Update_Click(object sender, EventArgs e)
         {
-            var id = int.Parse(textBox_TaskNoteId.Text);
-            var taskId = int.Parse(textBox_TNTaskId.Text);
-            var appointerId = int.Parse(textBox_TNAppenderId.Text);
-            var executorId = int.Parse(textBox_TNExecutorId.Text);
-            _taskNoteService.Update(id, taskId, appointerId, executorId);
+            try
+            {
+                var id = int.Parse(textBox_TaskNoteId.Text);
+                var taskId = int.Parse(textBox_TNTaskId.Text);
+                var appointerId = int.Parse(textBox_TNAppenderId.Text);
+                var executorId = int.Parse(textBox_TNExecutorId.Text);
+                _taskNoteService.Update(id, taskId, appointerId, executorId);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button_TaskNote_Insert_Click(object sender, EventArgs e)
         {
-            var taskId = int.Parse(textBox_TNTaskId.Text);
-            var appointerId = int.Parse(textBox_TNAppenderId.Text);
-            var executorId = int.Parse(textBox_TNExecutorId.Text);
-            _taskNoteService.Add(taskId, appointerId, executorId);
+            try
+            {
+                var taskId = int.Parse(textBox_TNTaskId.Text);
+                var appointerId = int.Parse(textBox_TNAppenderId.Text);
+                var executorId = int.Parse(textBox_TNExecutorId.Text);
+                _taskNoteService.Add(taskId, appointerId, executorId);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button_TaskNote_Delete_Click(object sender, EventArgs e)
         {
-            var id = 1;
-            _taskNoteService.Delete(id);
+            try
+            {
+                var id = int.Parse(textBox_TaskNoteId.Text);
+                _taskNoteService.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         #endregion
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+        }
     }
 }

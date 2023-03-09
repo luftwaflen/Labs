@@ -8,24 +8,25 @@ namespace BLL.Services
     public class TaskNoteService
     {
         private IRepository<TaskNote> _repository;
-        public TaskNoteService()
+        private List<TaskNote> _taskNotes;
+        public TaskNoteService(string connectionString)
         {
-            _repository = new TaskNoteRepository();
+            _repository = new TaskNoteRepository(connectionString);
             //_repository = new TaskNoteCSVRepository();
-        }
-        public List<TaskNote> GetAll()
-        {
-            var taskNotes = _repository.GetAll();
-            return taskNotes.ToList();
-        }
 
-        public void GetById(int id)
-        {
-            _repository.GetById(id);
+            _taskNotes = _repository.GetAll().ToList();
         }
+        public List<TaskNote> GetAll() => _taskNotes;
+
+        public TaskNote GetById(int id) => _taskNotes.FirstOrDefault(note => note.Id == id);
 
         public void Update(int id, int taskId, int appointerId, int executorId)
         {
+            var notes = _taskNotes.FirstOrDefault(note => note.Id == id);
+            notes.TaskId = taskId;
+            notes.AppointerId = appointerId;
+            notes.ExecutorId = executorId;
+            
             _repository.Update(new TaskNote
             {
                 Id = id,
@@ -37,6 +38,11 @@ namespace BLL.Services
 
         public void Add(int taskId, int appointerId, int executorId)
         {
+            var maxId = _taskNotes.Max(note => note.Id);
+            _taskNotes.Add(new TaskNote {Id = maxId+1,
+                AppointerId = appointerId,
+                ExecutorId = executorId,
+                TaskId = taskId });
             _repository.Add(new TaskNote
             {
                 TaskId = taskId,
@@ -47,6 +53,7 @@ namespace BLL.Services
 
         public void Delete(int id)
         {
+            _taskNotes.Remove(_taskNotes.FirstOrDefault(note => note.Id == id));
             _repository.Delete(id);
         }
     }

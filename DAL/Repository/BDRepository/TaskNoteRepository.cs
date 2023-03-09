@@ -9,15 +9,9 @@ namespace DAL.Repository.BDRepository
     public class TaskNoteRepository : IRepository<TaskNote>
     {
         private string _connectionString;
-        public TaskNoteRepository()
+        public TaskNoteRepository(string connectionString)
         {
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile("appconfiguration.json")
-                .AddEnvironmentVariables()
-                .Build();
-
-            Configuration projectConfig = config.GetRequiredSection("ConnectionStrings").Get<Configuration>();
-            _connectionString = projectConfig.DbString;
+            _connectionString = connectionString;
         }
         public void Add(TaskNote entity)
         {
@@ -28,9 +22,9 @@ namespace DAL.Repository.BDRepository
                 connection.Open();
 
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
-                SqlParameter appointerParameter = new SqlParameter("@name", entity.AppointerId);
-                SqlParameter executorParameter = new SqlParameter("@login", entity.ExecutorId);
-                SqlParameter taskParameter = new SqlParameter("@password", entity.TaskId);
+                SqlParameter appointerParameter = new SqlParameter("@appointerId", entity.AppointerId);
+                SqlParameter executorParameter = new SqlParameter("@executorId", entity.ExecutorId);
+                SqlParameter taskParameter = new SqlParameter("@taskId", entity.TaskId);
                 command.Parameters.Add(appointerParameter);
                 command.Parameters.Add(executorParameter);
                 command.Parameters.Add(taskParameter);

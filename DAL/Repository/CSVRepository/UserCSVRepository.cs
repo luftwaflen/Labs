@@ -1,18 +1,16 @@
 ﻿using DAL.Entities;
 using DAL.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System.Xml;
 
 namespace DAL.Repository.CSVRepository
 {
-    public class UserCSVRepository : IRepository<User>
+    public class UserCsvRepository : IRepository<User>
     {
-        string path = "";
-        XmlElement xRoot;
-        public UserCSVRepository()
+        private string _path = "";
+        public UserCsvRepository()
         {
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.Load(path);
-            xRoot = xDoc.DocumentElement;
+            
         }
         public void Add(User entity)
         {

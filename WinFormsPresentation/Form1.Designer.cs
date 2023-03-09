@@ -30,18 +30,20 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageUser = new System.Windows.Forms.TabPage();
-            this.tabPageTask = new System.Windows.Forms.TabPage();
-            this.tabPageTaskNote = new System.Windows.Forms.TabPage();
-            this.button_User_GetAll = new System.Windows.Forms.Button();
-            this.button_User_GetId = new System.Windows.Forms.Button();
-            this.button_User_Insert = new System.Windows.Forms.Button();
-            this.button_User_Update = new System.Windows.Forms.Button();
-            this.button_User_Delete = new System.Windows.Forms.Button();
-            this.dataGridView_User = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox_UserId = new System.Windows.Forms.TextBox();
             this.textBox_UserName = new System.Windows.Forms.TextBox();
+            this.textBox_UserId = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.dataGridView_User = new System.Windows.Forms.DataGridView();
+            this.button_User_Delete = new System.Windows.Forms.Button();
+            this.button_User_Update = new System.Windows.Forms.Button();
+            this.button_User_Insert = new System.Windows.Forms.Button();
+            this.button_User_GetId = new System.Windows.Forms.Button();
+            this.button_User_GetAll = new System.Windows.Forms.Button();
+            this.tabPageTask = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox_TaskDescription = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.textBox_TaskName = new System.Windows.Forms.TextBox();
             this.textBox_TaskId = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -51,9 +53,9 @@
             this.button_Task_Insert = new System.Windows.Forms.Button();
             this.button_Task_GetId = new System.Windows.Forms.Button();
             this.button_Task_GetAll = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox_TaskDescription = new System.Windows.Forms.TextBox();
+            this.tabPageTaskNote = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBox_TNTaskId = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.textBox_TNExecutorId = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -66,14 +68,12 @@
             this.button_TaskNote_Insert = new System.Windows.Forms.Button();
             this.button_TaskNote_GetId = new System.Windows.Forms.Button();
             this.button_TaskNote_GetAll = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.textBox_TNTaskId = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPageUser.SuspendLayout();
-            this.tabPageTask.SuspendLayout();
-            this.tabPageTaskNote.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_User)).BeginInit();
+            this.tabPageTask.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Task)).BeginInit();
+            this.tabPageTaskNote.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_TaskNote)).BeginInit();
             this.SuspendLayout();
             // 
@@ -110,6 +110,108 @@
             this.tabPageUser.Text = "User";
             this.tabPageUser.UseVisualStyleBackColor = true;
             // 
+            // textBox_UserName
+            // 
+            this.textBox_UserName.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox_UserName.Location = new System.Drawing.Point(253, 317);
+            this.textBox_UserName.Name = "textBox_UserName";
+            this.textBox_UserName.Size = new System.Drawing.Size(100, 29);
+            this.textBox_UserName.TabIndex = 9;
+            // 
+            // textBox_UserId
+            // 
+            this.textBox_UserId.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox_UserId.Location = new System.Drawing.Point(68, 317);
+            this.textBox_UserId.Name = "textBox_UserId";
+            this.textBox_UserId.Size = new System.Drawing.Size(100, 29);
+            this.textBox_UserId.TabIndex = 8;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label2.Location = new System.Drawing.Point(192, 320);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(55, 21);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Name:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(36, 320);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(26, 21);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Id:";
+            // 
+            // dataGridView_User
+            // 
+            this.dataGridView_User.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_User.Dock = System.Windows.Forms.DockStyle.Top;
+            this.dataGridView_User.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView_User.Name = "dataGridView_User";
+            this.dataGridView_User.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dataGridView_User.RowTemplate.Height = 25;
+            this.dataGridView_User.Size = new System.Drawing.Size(786, 284);
+            this.dataGridView_User.TabIndex = 5;
+            // 
+            // button_User_Delete
+            // 
+            this.button_User_Delete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_User_Delete.Location = new System.Drawing.Point(408, 375);
+            this.button_User_Delete.Name = "button_User_Delete";
+            this.button_User_Delete.Size = new System.Drawing.Size(75, 30);
+            this.button_User_Delete.TabIndex = 4;
+            this.button_User_Delete.Text = "Delete";
+            this.button_User_Delete.UseVisualStyleBackColor = true;
+            this.button_User_Delete.Click += new System.EventHandler(this.button_User_Delete_Click);
+            // 
+            // button_User_Update
+            // 
+            this.button_User_Update.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_User_Update.Location = new System.Drawing.Point(216, 375);
+            this.button_User_Update.Name = "button_User_Update";
+            this.button_User_Update.Size = new System.Drawing.Size(75, 30);
+            this.button_User_Update.TabIndex = 3;
+            this.button_User_Update.Text = "Update";
+            this.button_User_Update.UseVisualStyleBackColor = true;
+            this.button_User_Update.Click += new System.EventHandler(this.button_User_Update_Click);
+            // 
+            // button_User_Insert
+            // 
+            this.button_User_Insert.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_User_Insert.Location = new System.Drawing.Point(312, 375);
+            this.button_User_Insert.Name = "button_User_Insert";
+            this.button_User_Insert.Size = new System.Drawing.Size(75, 30);
+            this.button_User_Insert.TabIndex = 2;
+            this.button_User_Insert.Text = "Insert";
+            this.button_User_Insert.UseVisualStyleBackColor = true;
+            this.button_User_Insert.Click += new System.EventHandler(this.button_User_Insert_Click);
+            // 
+            // button_User_GetId
+            // 
+            this.button_User_GetId.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_User_GetId.Location = new System.Drawing.Point(120, 375);
+            this.button_User_GetId.Name = "button_User_GetId";
+            this.button_User_GetId.Size = new System.Drawing.Size(75, 30);
+            this.button_User_GetId.TabIndex = 1;
+            this.button_User_GetId.Text = "GetById";
+            this.button_User_GetId.UseVisualStyleBackColor = true;
+            this.button_User_GetId.Click += new System.EventHandler(this.button_User_GetId_Click);
+            // 
+            // button_User_GetAll
+            // 
+            this.button_User_GetAll.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_User_GetAll.Location = new System.Drawing.Point(24, 375);
+            this.button_User_GetAll.Name = "button_User_GetAll";
+            this.button_User_GetAll.Size = new System.Drawing.Size(75, 30);
+            this.button_User_GetAll.TabIndex = 0;
+            this.button_User_GetAll.Text = "GetAll";
+            this.button_User_GetAll.UseVisualStyleBackColor = true;
+            this.button_User_GetAll.Click += new System.EventHandler(this.button_User_GetAll_Click);
+            // 
             // tabPageTask
             // 
             this.tabPageTask.Controls.Add(this.label5);
@@ -133,132 +235,33 @@
             this.tabPageTask.Text = "Task";
             this.tabPageTask.UseVisualStyleBackColor = true;
             // 
-            // tabPageTaskNote
+            // label5
             // 
-            this.tabPageTaskNote.Controls.Add(this.label9);
-            this.tabPageTaskNote.Controls.Add(this.textBox_TNTaskId);
-            this.tabPageTaskNote.Controls.Add(this.label6);
-            this.tabPageTaskNote.Controls.Add(this.textBox_TNExecutorId);
-            this.tabPageTaskNote.Controls.Add(this.label7);
-            this.tabPageTaskNote.Controls.Add(this.textBox_TNAppenderId);
-            this.tabPageTaskNote.Controls.Add(this.textBox_TaskNoteId);
-            this.tabPageTaskNote.Controls.Add(this.label8);
-            this.tabPageTaskNote.Controls.Add(this.dataGridView_TaskNote);
-            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_Delete);
-            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_Update);
-            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_Insert);
-            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_GetId);
-            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_GetAll);
-            this.tabPageTaskNote.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tabPageTaskNote.Location = new System.Drawing.Point(4, 24);
-            this.tabPageTaskNote.Name = "tabPageTaskNote";
-            this.tabPageTaskNote.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTaskNote.Size = new System.Drawing.Size(792, 422);
-            this.tabPageTaskNote.TabIndex = 2;
-            this.tabPageTaskNote.Text = "TaskNote";
-            this.tabPageTaskNote.UseVisualStyleBackColor = true;
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label5.Location = new System.Drawing.Point(376, 330);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(92, 21);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "Description:";
             // 
-            // button_User_GetAll
+            // textBox_TaskDescription
             // 
-            this.button_User_GetAll.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_User_GetAll.Location = new System.Drawing.Point(24, 375);
-            this.button_User_GetAll.Name = "button_User_GetAll";
-            this.button_User_GetAll.Size = new System.Drawing.Size(75, 30);
-            this.button_User_GetAll.TabIndex = 0;
-            this.button_User_GetAll.Text = "GetAll";
-            this.button_User_GetAll.UseVisualStyleBackColor = true;
-            this.button_User_GetAll.Click += new System.EventHandler(this.button_User_GetAll_Click);
+            this.textBox_TaskDescription.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox_TaskDescription.Location = new System.Drawing.Point(474, 326);
+            this.textBox_TaskDescription.Name = "textBox_TaskDescription";
+            this.textBox_TaskDescription.Size = new System.Drawing.Size(100, 29);
+            this.textBox_TaskDescription.TabIndex = 20;
             // 
-            // button_User_GetId
+            // label4
             // 
-            this.button_User_GetId.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_User_GetId.Location = new System.Drawing.Point(120, 375);
-            this.button_User_GetId.Name = "button_User_GetId";
-            this.button_User_GetId.Size = new System.Drawing.Size(75, 30);
-            this.button_User_GetId.TabIndex = 1;
-            this.button_User_GetId.Text = "GetById";
-            this.button_User_GetId.UseVisualStyleBackColor = true;
-            this.button_User_GetId.Click += new System.EventHandler(this.button_User_GetId_Click);
-            // 
-            // button_User_Insert
-            // 
-            this.button_User_Insert.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_User_Insert.Location = new System.Drawing.Point(312, 375);
-            this.button_User_Insert.Name = "button_User_Insert";
-            this.button_User_Insert.Size = new System.Drawing.Size(75, 30);
-            this.button_User_Insert.TabIndex = 2;
-            this.button_User_Insert.Text = "Insert";
-            this.button_User_Insert.UseVisualStyleBackColor = true;
-            this.button_User_Insert.Click += new System.EventHandler(this.button_User_Insert_Click);
-            // 
-            // button_User_Update
-            // 
-            this.button_User_Update.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_User_Update.Location = new System.Drawing.Point(216, 375);
-            this.button_User_Update.Name = "button_User_Update";
-            this.button_User_Update.Size = new System.Drawing.Size(75, 30);
-            this.button_User_Update.TabIndex = 3;
-            this.button_User_Update.Text = "Update";
-            this.button_User_Update.UseVisualStyleBackColor = true;
-            this.button_User_Update.Click += new System.EventHandler(this.button_User_Update_Click);
-            // 
-            // button_User_Delete
-            // 
-            this.button_User_Delete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_User_Delete.Location = new System.Drawing.Point(408, 375);
-            this.button_User_Delete.Name = "button_User_Delete";
-            this.button_User_Delete.Size = new System.Drawing.Size(75, 30);
-            this.button_User_Delete.TabIndex = 4;
-            this.button_User_Delete.Text = "Delete";
-            this.button_User_Delete.UseVisualStyleBackColor = true;
-            this.button_User_Delete.Click += new System.EventHandler(this.button_User_Delete_Click);
-            // 
-            // dataGridView_User
-            // 
-            this.dataGridView_User.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView_User.Dock = System.Windows.Forms.DockStyle.Top;
-            this.dataGridView_User.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView_User.Name = "dataGridView_User";
-            this.dataGridView_User.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            this.dataGridView_User.RowTemplate.Height = 25;
-            this.dataGridView_User.Size = new System.Drawing.Size(786, 284);
-            this.dataGridView_User.TabIndex = 5;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(36, 320);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(26, 21);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Id:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(192, 320);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 21);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Name:";
-            // 
-            // textBox_UserId
-            // 
-            this.textBox_UserId.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox_UserId.Location = new System.Drawing.Point(68, 317);
-            this.textBox_UserId.Name = "textBox_UserId";
-            this.textBox_UserId.Size = new System.Drawing.Size(100, 29);
-            this.textBox_UserId.TabIndex = 8;
-            // 
-            // textBox_UserName
-            // 
-            this.textBox_UserName.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox_UserName.Location = new System.Drawing.Point(253, 317);
-            this.textBox_UserName.Name = "textBox_UserName";
-            this.textBox_UserName.Size = new System.Drawing.Size(100, 29);
-            this.textBox_UserName.TabIndex = 9;
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label4.Location = new System.Drawing.Point(36, 330);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(26, 21);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Id:";
             // 
             // textBox_TaskName
             // 
@@ -352,33 +355,48 @@
             this.button_Task_GetAll.UseVisualStyleBackColor = true;
             this.button_Task_GetAll.Click += new System.EventHandler(this.button_Task_GetAll_Click);
             // 
-            // label4
+            // tabPageTaskNote
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(36, 330);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(26, 21);
-            this.label4.TabIndex = 19;
-            this.label4.Text = "Id:";
+            this.tabPageTaskNote.Controls.Add(this.label9);
+            this.tabPageTaskNote.Controls.Add(this.textBox_TNTaskId);
+            this.tabPageTaskNote.Controls.Add(this.label6);
+            this.tabPageTaskNote.Controls.Add(this.textBox_TNExecutorId);
+            this.tabPageTaskNote.Controls.Add(this.label7);
+            this.tabPageTaskNote.Controls.Add(this.textBox_TNAppenderId);
+            this.tabPageTaskNote.Controls.Add(this.textBox_TaskNoteId);
+            this.tabPageTaskNote.Controls.Add(this.label8);
+            this.tabPageTaskNote.Controls.Add(this.dataGridView_TaskNote);
+            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_Delete);
+            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_Update);
+            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_Insert);
+            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_GetId);
+            this.tabPageTaskNote.Controls.Add(this.button_TaskNote_GetAll);
+            this.tabPageTaskNote.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.tabPageTaskNote.Location = new System.Drawing.Point(4, 24);
+            this.tabPageTaskNote.Name = "tabPageTaskNote";
+            this.tabPageTaskNote.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTaskNote.Size = new System.Drawing.Size(792, 422);
+            this.tabPageTaskNote.TabIndex = 2;
+            this.tabPageTaskNote.Text = "TaskNote";
+            this.tabPageTaskNote.UseVisualStyleBackColor = true;
             // 
-            // label5
+            // label9
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label5.Location = new System.Drawing.Point(376, 330);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(92, 21);
-            this.label5.TabIndex = 21;
-            this.label5.Text = "Description:";
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label9.Location = new System.Drawing.Point(518, 332);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(55, 21);
+            this.label9.TabIndex = 35;
+            this.label9.Text = "TaskId:";
             // 
-            // textBox_TaskDescription
+            // textBox_TNTaskId
             // 
-            this.textBox_TaskDescription.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox_TaskDescription.Location = new System.Drawing.Point(474, 326);
-            this.textBox_TaskDescription.Name = "textBox_TaskDescription";
-            this.textBox_TaskDescription.Size = new System.Drawing.Size(100, 29);
-            this.textBox_TaskDescription.TabIndex = 20;
+            this.textBox_TNTaskId.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox_TNTaskId.Location = new System.Drawing.Point(580, 328);
+            this.textBox_TNTaskId.Name = "textBox_TNTaskId";
+            this.textBox_TNTaskId.Size = new System.Drawing.Size(55, 29);
+            this.textBox_TNTaskId.TabIndex = 34;
             // 
             // label6
             // 
@@ -500,24 +518,6 @@
             this.button_TaskNote_GetAll.UseVisualStyleBackColor = true;
             this.button_TaskNote_GetAll.Click += new System.EventHandler(this.button_TaskNote_GetAll_Click);
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label9.Location = new System.Drawing.Point(518, 332);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(55, 21);
-            this.label9.TabIndex = 35;
-            this.label9.Text = "TaskId:";
-            // 
-            // textBox_TNTaskId
-            // 
-            this.textBox_TNTaskId.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox_TNTaskId.Location = new System.Drawing.Point(580, 328);
-            this.textBox_TNTaskId.Name = "textBox_TNTaskId";
-            this.textBox_TNTaskId.Size = new System.Drawing.Size(55, 29);
-            this.textBox_TNTaskId.TabIndex = 34;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -525,16 +525,18 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "WA$ERSTDYFUGUI";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPageUser.ResumeLayout(false);
             this.tabPageUser.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_User)).EndInit();
             this.tabPageTask.ResumeLayout(false);
             this.tabPageTask.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Task)).EndInit();
             this.tabPageTaskNote.ResumeLayout(false);
             this.tabPageTaskNote.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_User)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Task)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_TaskNote)).EndInit();
             this.ResumeLayout(false);
 

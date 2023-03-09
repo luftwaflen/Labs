@@ -1,4 +1,4 @@
-﻿namespace DAL
+﻿namespace WinFormsPresentation
 {
     public class Configuration
     {
