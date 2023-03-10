@@ -1,6 +1,6 @@
 ﻿using DAL.Entities;
-using DAL.Repository.BDRepository;
-using DAL.Repository.CSVRepository;
+using DAL.Repository.DbRepository;
+using DAL.Repository.CsvRepository;
 using DAL.Repository.Interfaces;
 
 namespace BLL.Services

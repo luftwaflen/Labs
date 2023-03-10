@@ -1,33 +1,29 @@
-﻿using DAL.Entities;
-using DAL.Repository.Interfaces;
-using Microsoft.Extensions.Configuration;
+﻿using DAL.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
+using Task = DAL.Entities.Task;
 
-namespace DAL.Repository.BDRepository
+namespace DAL.Repository.DbRepository
 {
-    public class TaskNoteRepository : IRepository<TaskNote>
+    public class TaskRepository : IRepository<Task>
     {
         private string _connectionString;
-        public TaskNoteRepository(string connectionString)
+        public TaskRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
-        public void Add(TaskNote entity)
+        public void Add(Task entity)
         {
-            string sqlExpression = "INSERT INTO TaskNote (TaskNote.AppointerId, TaskNote.ExecutorId, TaskNote.TaskId)" +
-                "VALUES (@appointerId, @executorId, @taskId)";
+            string sqlExpression = "INSERT INTO Task (Task.Name, Task.Description) VALUES (@name, @description)";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
-                SqlParameter appointerParameter = new SqlParameter("@appointerId", entity.AppointerId);
-                SqlParameter executorParameter = new SqlParameter("@executorId", entity.ExecutorId);
-                SqlParameter taskParameter = new SqlParameter("@taskId", entity.TaskId);
-                command.Parameters.Add(appointerParameter);
-                command.Parameters.Add(executorParameter);
-                command.Parameters.Add(taskParameter);
+                SqlParameter nameParameter = new SqlParameter("@name", entity.Name);
+                SqlParameter descriptionParameter = new SqlParameter("@description", entity.Description);
+                command.Parameters.Add(nameParameter);
+                command.Parameters.Add(descriptionParameter);
 
                 command.ExecuteNonQuery();
             }
@@ -35,7 +31,7 @@ namespace DAL.Repository.BDRepository
 
         public void Delete(int id)
         {
-            string sqlExpression = "DELETE FROM TaskNote WHERE (TaskNote.Id) = @id";
+            string sqlExpression = "DELETE FROM Task WHERE (Task.Id) = @id";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -47,11 +43,11 @@ namespace DAL.Repository.BDRepository
                 command.ExecuteNonQuery();
             }
         }
-
-        public IEnumerable<TaskNote> GetAll()
+                
+        public IEnumerable<Task> GetAll()
         {
-            List<TaskNote> taskNotes = new List<TaskNote>();
-            string sqlExpression = "SELECT * From TaskNote";
+            List<Task> tasks = new List<Task>();
+            string sqlExpression = "SELECT * From Task";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -65,28 +61,26 @@ namespace DAL.Repository.BDRepository
                         while (reader.Read())
                         {
                             int id = reader.GetInt32(0);
-                            int appointerId = reader.GetInt32(1);
-                            int executorId = reader.GetInt32(2);
-                            int taskId = reader.GetInt32(3);
-                            taskNotes.Add(new TaskNote
+                            string name = reader.GetString(1);
+                            string description = reader.GetString(2);
+                            tasks.Add(new Task
                             {
                                 Id = id,
-                                AppointerId = appointerId,
-                                ExecutorId = executorId,
-                                TaskId = taskId
+                                Name = name,
+                                Description = description
                             });
                         }
                     }
                 }
             }
 
-            return taskNotes;
+            return tasks;
         }
 
-        public TaskNote GetById(int id)
+        public Task GetById(int id)
         {
-            TaskNote taskNote = new TaskNote();
-            string sqlExpression = "SELECT * From TaskNote WHERE (TaskNote.Id) = @id";
+            Task task = new Task();
+            string sqlExpression = "SELECT * From Task WHERE (Task.Id) = @id";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -100,10 +94,9 @@ namespace DAL.Repository.BDRepository
                 {
                     if (reader.HasRows)
                     {
-                        taskNote.Id = reader.GetInt32(0);
-                        taskNote.AppointerId = reader.GetInt32(1);
-                        taskNote.ExecutorId = reader.GetInt32(2);
-                        taskNote.TaskId = reader.GetInt32(3);
+                        task.Id = reader.GetInt32(0);
+                        task.Name = reader.GetString(1);
+                        task.Description = reader.GetString(2);
                     }
                     else
                     {
@@ -112,10 +105,10 @@ namespace DAL.Repository.BDRepository
                 }
             }
 
-            return taskNote;
+            return task;
         }
 
-        public void Update(TaskNote entity)
+        public void Update(Task entity)
         {
             throw new NotImplementedException();
         }

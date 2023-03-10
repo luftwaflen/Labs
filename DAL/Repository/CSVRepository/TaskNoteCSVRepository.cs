@@ -3,7 +3,7 @@ using DAL.Entities;
 using DAL.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace DAL.Repository.CSVRepository
+namespace DAL.Repository.CsvRepository
 {
     public class TaskNoteCsvRepository : IRepository<TaskNote>
     {

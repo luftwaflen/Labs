@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace DAL.Repository.BDRepository
+namespace DAL.Repository.DbRepository
 {    
     public class UserRepository : IRepository<User>
     {

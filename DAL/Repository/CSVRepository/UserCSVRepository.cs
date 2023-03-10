@@ -3,7 +3,7 @@ using DAL.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Xml;
 
-namespace DAL.Repository.CSVRepository
+namespace DAL.Repository.CsvRepository
 {
     public class UserCsvRepository : IRepository<User>
     {

@@ -1,5 +1,5 @@
 ﻿using DAL.Entities;
-using DAL.Repository.BDRepository;
+using DAL.Repository.DbRepository;
 using Moq;
 using System.Collections.Generic;
 using Xunit;

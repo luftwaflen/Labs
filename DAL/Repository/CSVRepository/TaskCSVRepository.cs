@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Task = DAL.Entities.Task;
 
-namespace DAL.Repository.CSVRepository
+namespace DAL.Repository.CsvRepository
 {
     public class TaskCsvRepository : IRepository<Task>
     {
