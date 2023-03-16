@@ -1,4 +1,5 @@
 ﻿using DAL.Entities;
+using DAL.Repository.Changes;
 using DAL.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -6,14 +7,15 @@ using System.Data.SqlClient;
 
 namespace DAL.Repository.DbRepository
 {    
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IRepository<UserEntity, UserEntityChange>
     {
         private string _connectionString;
+        public List<UserEntityChange> ChangeHistory { get; set; }
         public UserRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
-        public void Add(User entity)
+        public void Add(UserEntity entity)
         {
             string sqlExpression = "INSERT INTO [User] ([User].Name, [User].Login, [User].Password) VALUES (@name, @login, @password)";
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -47,9 +49,9 @@ namespace DAL.Repository.DbRepository
             }
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<UserEntity> GetAll()
         {
-            List<User> users = new List<User>();
+            List<UserEntity> users = new List<UserEntity>();
             string sqlExpression = "SELECT * From [User]";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -65,7 +67,7 @@ namespace DAL.Repository.DbRepository
                         {
                             int id = reader.GetInt32(0);
                             string name = reader.GetString(1);
-                            users.Add(new User
+                            users.Add(new UserEntity
                             {
                                 Id = id,
                                 Name = name
@@ -78,9 +80,9 @@ namespace DAL.Repository.DbRepository
             return users;
         }
 
-        public User GetById(int id)
+        public UserEntity GetById(int id)
         {
-            User user = new User();
+            UserEntity user = new UserEntity();
             string sqlExpression = "SELECT * From [User] WHERE ([User].Id) = @id";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -111,7 +113,7 @@ namespace DAL.Repository.DbRepository
             return user;
         }
 
-        public void Update(User entity)
+        public void Update(UserEntity entity)
         {
             throw new NotImplementedException();
         }
@@ -123,6 +125,37 @@ namespace DAL.Repository.DbRepository
             {
                 connection.Close();
             }
+        }
+
+        public void CommitChanges()
+        {
+            foreach (var change in ChangeHistory)
+            {
+                switch (change.Operation)
+                {
+                    case "Insert":
+                        {
+                            Add(change.ChangedObject);
+                        }
+                        break;
+
+                    case "Update":
+                        {
+                            Update(change.ChangedObject);
+                        }
+                        break;
+
+                    case "Delete":
+                        {
+                            Delete(change.ChangedObject.Id);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            Dispose();
         }
     }
 }

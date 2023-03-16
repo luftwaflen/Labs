@@ -5,14 +5,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace DAL.Repository.CsvRepository
 {
-    public class TaskNoteCsvRepository : IRepository<TaskNote>
+    public class TaskNoteCsvRepository : IRepository<TaskNoteEntity>
     {
         private string _path = "";
         public TaskNoteCsvRepository()
         {
             
         }
-        public void Add(TaskNote entity)
+        public void Add(TaskNoteEntity entity)
         {
             throw new NotImplementedException();
         }
@@ -27,17 +27,17 @@ namespace DAL.Repository.CsvRepository
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TaskNote> GetAll()
+        public IEnumerable<TaskNoteEntity> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public TaskNote GetById(int id)
+        public TaskNoteEntity GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(TaskNote entity)
+        public void Update(TaskNoteEntity entity)
         {
             throw new NotImplementedException();
         }

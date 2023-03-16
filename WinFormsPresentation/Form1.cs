@@ -1,5 +1,5 @@
 using DAL.Entities;
-using Task = DAL.Entities.Task;
+using TaskEntity = DAL.Entities.TaskEntity;
 using BLL.Services;
 using Microsoft.Extensions.Configuration;
 
@@ -49,7 +49,7 @@ namespace WinFormsPresentation
                 MessageBox.Show(ex.Message);
             }
         }
-        private void InitUserDataGridView(IEnumerable<User> users)
+        private void InitUserDataGridView(IEnumerable<UserEntity> users)
         {
             dataGridView_User.ColumnCount = 2;
             dataGridView_User.Columns[0].Name = "Id";
@@ -67,7 +67,7 @@ namespace WinFormsPresentation
             {
                 var id = int.Parse(textBox_UserId.Text);
                 var user = _userService.GetById(id);
-                var tmp = new List<User> { user };
+                var tmp = new List<UserEntity> { user };
                 dataGridView_User.Rows.Clear();
                 InitUserDataGridView(tmp);
             }
@@ -134,7 +134,7 @@ namespace WinFormsPresentation
                 MessageBox.Show(ex.Message);
             }
         }
-        private void InitTaskDataGridView(IEnumerable<Task> tasks)
+        private void InitTaskDataGridView(IEnumerable<TaskEntity> tasks)
         {
             dataGridView_Task.ColumnCount = 3;
             dataGridView_Task.Columns[0].Name = "Id";
@@ -153,7 +153,7 @@ namespace WinFormsPresentation
             {
                 var id = int.Parse(textBox_TaskId.Text);
                 var task = _taskService.GetById(id);
-                var tmp = new List<Task> { task };
+                var tmp = new List<TaskEntity> { task };
                 dataGridView_Task.Rows.Clear();
                 InitTaskDataGridView(tmp);
 
@@ -224,7 +224,7 @@ namespace WinFormsPresentation
                 MessageBox.Show(ex.Message);
             }
         }
-        private void InitTaskNoteDataGridView(IEnumerable<TaskNote> taskNotes)
+        private void InitTaskNoteDataGridView(IEnumerable<TaskNoteEntity> taskNotes)
         {
             dataGridView_TaskNote.ColumnCount = 4;
             dataGridView_TaskNote.Columns[0].Name = "Id";
@@ -247,7 +247,7 @@ namespace WinFormsPresentation
             {
                 var id = int.Parse(textBox_TaskNoteId.Text);
                 dataGridView_TaskNote.Rows.Clear();
-                List<TaskNote> notes = new List<TaskNote>();
+                List<TaskNoteEntity> notes = new List<TaskNoteEntity>();
                 notes.Add(_taskNoteService.GetById(id));
                 InitTaskNoteDataGridView(notes);
             }

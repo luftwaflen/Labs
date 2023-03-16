@@ -13,26 +13,26 @@ namespace TestDAL
         {
             Mock a = new Mock<UserRepository>();
 
-            List<User> expected = GetTmpUsers();
-            List<User> actual = new List<User>();
+            List<UserEntity> expected = GetTmpUsers();
+            List<UserEntity> actual = new List<UserEntity>();
 
             Assert.Equal(expected, actual);
         }
-        public List<User> GetTmpUsers()
+        public List<UserEntity> GetTmpUsers()
         {
-            List<User> users = new List<User>();
+            List<UserEntity> users = new List<UserEntity>();
 
-            users.Add(new User
+            users.Add(new UserEntity
             {
                 Id = 1,
                 Name = "Alex"
             });
-            users.Add(new User
+            users.Add(new UserEntity
             {
                 Id = 2,
                 Name = "Bob"
             });
-            users.Add(new User
+            users.Add(new UserEntity
             {
                 Id = 3,
                 Name = "Ron"

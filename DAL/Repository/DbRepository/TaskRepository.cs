@@ -1,18 +1,20 @@
-﻿using DAL.Repository.Interfaces;
+﻿using DAL.Repository.Changes;
+using DAL.Repository.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
-using Task = DAL.Entities.Task;
+using TaskEntity = DAL.Entities.TaskEntity;
 
 namespace DAL.Repository.DbRepository
 {
-    public class TaskRepository : IRepository<Task>
+    public class TaskRepository : IRepository<TaskEntity, TaskEntityChange>
     {
         private string _connectionString;
+        public List<TaskEntityChange> ChangeHistory { get; set; }
         public TaskRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
-        public void Add(Task entity)
+        public void Add(TaskEntity entity)
         {
             string sqlExpression = "INSERT INTO Task (Task.Name, Task.Description) VALUES (@name, @description)";
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -43,10 +45,10 @@ namespace DAL.Repository.DbRepository
                 command.ExecuteNonQuery();
             }
         }
-                
-        public IEnumerable<Task> GetAll()
+
+        public IEnumerable<TaskEntity> GetAll()
         {
-            List<Task> tasks = new List<Task>();
+            List<TaskEntity> tasks = new List<TaskEntity>();
             string sqlExpression = "SELECT * From Task";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -63,7 +65,7 @@ namespace DAL.Repository.DbRepository
                             int id = reader.GetInt32(0);
                             string name = reader.GetString(1);
                             string description = reader.GetString(2);
-                            tasks.Add(new Task
+                            tasks.Add(new TaskEntity
                             {
                                 Id = id,
                                 Name = name,
@@ -77,9 +79,9 @@ namespace DAL.Repository.DbRepository
             return tasks;
         }
 
-        public Task GetById(int id)
+        public TaskEntity GetById(int id)
         {
-            Task task = new Task();
+            TaskEntity task = new TaskEntity();
             string sqlExpression = "SELECT * From Task WHERE (Task.Id) = @id";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -108,7 +110,7 @@ namespace DAL.Repository.DbRepository
             return task;
         }
 
-        public void Update(Task entity)
+        public void Update(TaskEntity entity)
         {
             throw new NotImplementedException();
         }
@@ -120,6 +122,37 @@ namespace DAL.Repository.DbRepository
             {
                 connection.Close();
             }
+        }
+
+        public void CommitChanges()
+        {
+            foreach (var change in ChangeHistory)
+            {
+                switch (change.Operation)
+                {
+                    case "Insert":
+                        {
+                            Add(change.ChangedObject);
+                        }
+                        break;
+
+                    case "Update":
+                        {
+                            Update(change.ChangedObject);
+                        }
+                        break;
+
+                    case "Delete":
+                        {
+                            Delete(change.ChangedObject.Id);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            Dispose();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace DAL.Entities
 {
-    public class TaskNote
+    public class TaskNoteEntity
     {
         public int Id { get; set; }
         public int AppointerId { get; set; }

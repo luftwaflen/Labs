@@ -1,4 +1,5 @@
 ﻿using DAL.Entities;
+using DAL.Repository.Changes;
 using DAL.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -6,14 +7,15 @@ using System.Data.SqlClient;
 
 namespace DAL.Repository.DbRepository
 {
-    public class TaskNoteRepository : IRepository<TaskNote>
+    public class TaskNoteRepository : IRepository<TaskNoteEntity, TaskNoteEntityChange>
     {
         private string _connectionString;
+        public List<TaskNoteEntityChange> ChangeHistory { get; set; }
         public TaskNoteRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
-        public void Add(TaskNote entity)
+        public void Add(TaskNoteEntity entity)
         {
             string sqlExpression = "INSERT INTO TaskNote (TaskNote.AppointerId, TaskNote.ExecutorId, TaskNote.TaskId)" +
                 "VALUES (@appointerId, @executorId, @taskId)";
@@ -48,9 +50,9 @@ namespace DAL.Repository.DbRepository
             }
         }
 
-        public IEnumerable<TaskNote> GetAll()
+        public IEnumerable<TaskNoteEntity> GetAll()
         {
-            List<TaskNote> taskNotes = new List<TaskNote>();
+            List<TaskNoteEntity> taskNotes = new List<TaskNoteEntity>();
             string sqlExpression = "SELECT * From TaskNote";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -68,7 +70,7 @@ namespace DAL.Repository.DbRepository
                             int appointerId = reader.GetInt32(1);
                             int executorId = reader.GetInt32(2);
                             int taskId = reader.GetInt32(3);
-                            taskNotes.Add(new TaskNote
+                            taskNotes.Add(new TaskNoteEntity
                             {
                                 Id = id,
                                 AppointerId = appointerId,
@@ -83,9 +85,9 @@ namespace DAL.Repository.DbRepository
             return taskNotes;
         }
 
-        public TaskNote GetById(int id)
+        public TaskNoteEntity GetById(int id)
         {
-            TaskNote taskNote = new TaskNote();
+            TaskNoteEntity taskNote = new TaskNoteEntity();
             string sqlExpression = "SELECT * From TaskNote WHERE (TaskNote.Id) = @id";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -115,7 +117,7 @@ namespace DAL.Repository.DbRepository
             return taskNote;
         }
 
-        public void Update(TaskNote entity)
+        public void Update(TaskNoteEntity entity)
         {
             throw new NotImplementedException();
         }
@@ -127,6 +129,37 @@ namespace DAL.Repository.DbRepository
             {
                 connection.Close();
             }
+        }
+
+        public void CommitChanges()
+        {
+            foreach (var change in ChangeHistory)
+            {
+                switch (change.Operation)
+                {
+                    case "Insert":
+                        {
+                            Add(change.ChangedObject);
+                        }
+                        break;
+
+                    case "Update":
+                        {
+                            Update(change.ChangedObject);
+                        }
+                        break;
+
+                    case "Delete":
+                        {
+                            Delete(change.ChangedObject.Id);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            Dispose();
         }
     }
 }

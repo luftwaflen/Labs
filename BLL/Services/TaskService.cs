@@ -1,31 +1,54 @@
 ﻿using DAL.Repository.DbRepository;
 using DAL.Repository.CsvRepository;
 using DAL.Repository.Interfaces;
-using Task = DAL.Entities.Task;
+using TaskEntity = DAL.Entities.TaskEntity;
+using DAL.Repository.Changes;
 
 namespace BLL.Services
 {
     public class TaskService
     {
-        private IRepository<Task> _repository;
-        private List<Task> _tasks;
-        public TaskService(string connectionString)
+        private IRepository<TaskEntity, TaskEntityChange> _repository;
+        private List<TaskEntity> _tasks;
+        public TaskService(string connectionString, int dataSource)
         {
-            _repository = new TaskRepository(connectionString);
-            //_repository = new TaskCSVRepository();
+            switch (dataSource)
+            {
+                case 1:
+                    _repository = new TaskRepository(connectionString);
+                    break;
+
+                case 2:
+                    _repository = new TaskCSVRepository();
+                    break;
+
+                default:
+                    break;
+            }
 
             _tasks = _repository.GetAll().ToList();
         }
-        public List<Task> GetAll() => _tasks;
-        public Task GetById(int id) => _tasks.FirstOrDefault(task => task.Id == id);
+        public List<TaskEntity> GetAll() => _tasks;
+        public TaskEntity GetById(int id) => _tasks.FirstOrDefault(task => task.Id == id);
 
         public void Update(int id, string name, string description)
         {
             var task = _tasks.FirstOrDefault(task => task.Id == id);
+            var oldTask = new TaskEntity
+            {
+                Id = task.Id,
+                Name = task.Name,
+                Description = task.Description
+            };
             task.Name = name;
             task.Description = description;
 
-            _repository.Update(new Task { Id = id, Name = name, Description = description });
+            _repository.ChangeHistory.Add(new TaskEntityChange
+            {
+                Operation = "Update",
+                OriginObject = oldTask,
+                ChangedObject = task
+            });
         }
 
         public void Add(int id, string name, string description)
@@ -33,14 +56,28 @@ namespace BLL.Services
             var maxId = 0;
             if (_tasks.Count > 0)
                 maxId = _tasks.Max(task => task.Id);
-            _tasks.Add(new Task { Id = maxId + 1, Name = name, Description = description });
-            _repository.Add(new Task { Id = id, Name = name, Description = description });
+            var newTask = new TaskEntity { Id = maxId + 1, Name = name, Description = description };
+            _tasks.Add(newTask);
+            _repository.ChangeHistory.Add(new TaskEntityChange
+            {
+                Operation = "Insert",
+                ChangedObject = newTask
+            });
         }
 
         public void Delete(int id)
         {
             _tasks.Remove(_tasks.FirstOrDefault(task => task.Id == id));
-            _repository.Delete(id);
+            _repository.ChangeHistory.Add(new TaskEntityChange
+            {
+                Operation = "Delete",
+                ChangedObject = new TaskEntity { Id = id }
+            });
+        }
+
+        public void CommitChanges()
+        {
+            _repository.CommitChanges();
         }
     }
 }
