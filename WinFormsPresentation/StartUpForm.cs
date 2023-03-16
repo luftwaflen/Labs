@@ -16,5 +16,12 @@ namespace WinFormsPresentation
         {
             InitializeComponent();
         }
+
+        private void button_SignIn_Click(object sender, EventArgs e)
+        {
+            var cruidForm = new CruidForm();
+            cruidForm.Show();
+            this.Hide();
+        }
     }
 }

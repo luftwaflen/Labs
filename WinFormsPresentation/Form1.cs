@@ -22,9 +22,9 @@ namespace WinFormsPresentation
             Configuration projectConfig = config.GetRequiredSection("ConnectionStrings").Get<Configuration>();
             var connectionString = projectConfig.DbString;
 
-            _userService = new UserService(connectionString);
-            _taskService = new TaskService(connectionString);
-            _taskNoteService = new TaskNoteService(connectionString);
+            _userService = new UserService(connectionString, 1);
+            _taskService = new TaskService(connectionString, 1);
+            _taskNoteService = new TaskNoteService(connectionString, 1);
         }
         private void Form1_Load(object sender, EventArgs e)
         {

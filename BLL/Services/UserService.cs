@@ -20,7 +20,7 @@ namespace BLL.Services
                     break;
 
                 case 2:
-                    _repository = new UserCSVRepository();
+                    _repository = new UserCsvRepository();
                     break;
 
                 default:

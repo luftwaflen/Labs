@@ -19,7 +19,7 @@ namespace BLL.Services
                     break;
 
                 case 2:
-                    _repository = new TaskCSVRepository();
+                    _repository = new TaskCsvRepository(connectionString);
                     break;
 
                 default:

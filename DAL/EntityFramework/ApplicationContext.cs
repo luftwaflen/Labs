@@ -15,7 +15,7 @@ namespace DAL.EntityFramework
         {
 
         }
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
         public DbSet<TaskEntity> Tasks { get; set; }
         public DbSet<TaskNoteEntity> TaskNotes { get; set; }
         //public ApplicationContext() => Database.EnsureCreated();

@@ -19,7 +19,7 @@ namespace BLL.Services
                     break;
 
                 case 2:
-                    _repository = new TaskNoteCSVRepository();
+                    _repository = new TaskNoteCsvRepository();
                     break;
 
                 default:
