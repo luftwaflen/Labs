@@ -19,7 +19,8 @@ namespace WinFormsPresentation
 
         private void button_SignIn_Click(object sender, EventArgs e)
         {
-            var cruidForm = new CruidForm();
+            var dataSource = comboBox1.SelectedIndex;
+            var cruidForm = new CruidForm(dataSource);
             cruidForm.Show();
             this.Hide();
         }

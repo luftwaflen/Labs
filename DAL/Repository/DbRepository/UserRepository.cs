@@ -17,15 +17,15 @@ namespace DAL.Repository.DbRepository
         }
         public void Add(UserEntity entity)
         {
-            string sqlExpression = "INSERT INTO [User] ([User].Name, [User].Login, [User].Password) VALUES (@name, @login, @password)";
+            var sqlExpression = "INSERT INTO [User] ([User].Name, [User].Login, [User].Password) VALUES (@name, @login, @password)";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand(sqlExpression, connection);
-                SqlParameter nameParameter = new SqlParameter("@name", entity.Name);
-                SqlParameter loginParameter = new SqlParameter("@login", entity.Name);
-                SqlParameter pasParameter = new SqlParameter("@password", entity.Name);
+                var command = new SqlCommand(sqlExpression, connection);
+                var nameParameter = new SqlParameter("@name", entity.Name);
+                var loginParameter = new SqlParameter("@login", entity.Name);
+                var pasParameter = new SqlParameter("@password", entity.Name);
                 command.Parameters.Add(nameParameter);
                 command.Parameters.Add(loginParameter);
                 command.Parameters.Add(pasParameter);
@@ -36,13 +36,13 @@ namespace DAL.Repository.DbRepository
 
         public void Delete(int id)
         {
-            string sqlExpression = "DELETE FROM [User] WHERE ([User].Id) = @id";
+            var sqlExpression = "DELETE FROM [User] WHERE ([User].Id) = @id";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand(sqlExpression, connection);
-                SqlParameter idParameter = new SqlParameter("@id", id);
+                var command = new SqlCommand(sqlExpression, connection);
+                var idParameter = new SqlParameter("@id", id);
                 command.Parameters.Add(idParameter);
 
                 command.ExecuteNonQuery();
@@ -51,8 +51,8 @@ namespace DAL.Repository.DbRepository
 
         public IEnumerable<UserEntity> GetAll()
         {
-            List<UserEntity> users = new List<UserEntity>();
-            string sqlExpression = "SELECT * From [User]";
+            var users = new List<UserEntity>();
+            var sqlExpression = "SELECT * From [User]";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -65,8 +65,8 @@ namespace DAL.Repository.DbRepository
                     {
                         while (reader.Read())
                         {
-                            int id = reader.GetInt32(0);
-                            string name = reader.GetString(1);
+                            var id = reader.GetInt32(0);
+                            var name = reader.GetString(1);
                             users.Add(new UserEntity
                             {
                                 Id = id,
@@ -82,15 +82,15 @@ namespace DAL.Repository.DbRepository
 
         public UserEntity GetById(int id)
         {
-            UserEntity user = new UserEntity();
-            string sqlExpression = "SELECT * From [User] WHERE ([User].Id) = @id";
+            var user = new UserEntity();
+            var sqlExpression = "SELECT * From [User] WHERE ([User].Id) = @id";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand(sqlExpression, connection);
+                var command = new SqlCommand(sqlExpression, connection);
 
-                SqlParameter idParameter = new SqlParameter("@id", id);
+                var idParameter = new SqlParameter("@id", id);
                 command.Parameters.Add(idParameter);
 
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -120,7 +120,7 @@ namespace DAL.Repository.DbRepository
 
         public void Dispose()
         {
-            SqlConnection connection = new SqlConnection(_connectionString);
+            var connection = new SqlConnection(_connectionString);
             if (connection.State == ConnectionState.Open)
             {
                 connection.Close();

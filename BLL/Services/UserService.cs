@@ -3,27 +3,32 @@ using DAL.Repository.DbRepository;
 using DAL.Repository.CsvRepository;
 using DAL.Repository.Interfaces;
 using DAL.Repository.Changes;
+using BLL.Interfaces;
 
 namespace BLL.Services
 {
-    public class UserService
+    public class UserService : IService
     {
         private IRepository<UserEntity, UserEntityChange> _repository;
         private List<UserEntity> _users;
         private List<UserEntityChange> _changeHistory;
+
         public UserService(string connectionString, int dataSource)
         {
+            var dictionary = new Dictionary<int, IRepository<UserEntity, UserEntityChange>>();
+            dictionary.Add(0, new UserCsvRepository(connectionString));
+            dictionary.Add(1, new UserRepository(connectionString));
+
+            _repository = dictionary[dataSource];
+
             switch (dataSource)
             {
                 case 1:
-                    _repository = new UserRepository(connectionString);
-                    break;
-
-                case 2:
-                    _repository = new UserCsvRepository();
+                    _repository = new UserCsvRepository(connectionString);
                     break;
 
                 default:
+                    _repository = new UserRepository(connectionString);
                     break;
             }
 

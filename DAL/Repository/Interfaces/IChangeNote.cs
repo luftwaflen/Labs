@@ -5,5 +5,6 @@
         public string Operation { get; set; }
         public T OriginObject { get; set; }
         public T ChangedObject { get; set; }
+        public void ExecuteOperation();
     }
 }

@@ -15,14 +15,11 @@ namespace BLL.Services
             switch (dataSource)
             {
                 case 1:
-                    _repository = new TaskRepository(connectionString);
-                    break;
-
-                case 2:
                     _repository = new TaskCsvRepository(connectionString);
                     break;
 
                 default:
+                    _repository = new TaskRepository(connectionString);
                     break;
             }
 

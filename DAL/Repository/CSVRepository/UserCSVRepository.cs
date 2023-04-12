@@ -1,24 +1,24 @@
-﻿using DAL.Entities;
+﻿using CsvHelper;
+using DAL.Entities;
 using DAL.Repository.Changes;
 using DAL.Repository.Interfaces;
-using Microsoft.Extensions.Configuration;
-using System.Xml;
+using System.Globalization;
 
 namespace DAL.Repository.CsvRepository
 {
     public class UserCsvRepository : IRepository<UserEntity, UserEntityChange>
     {
         private string _path = "";
-        public UserCsvRepository()
+        public UserCsvRepository(string path)
         {
-            
+            _path = path;
         }
 
         public List<UserEntityChange> ChangeHistory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Add(UserEntity entity)
         {
-            throw new NotImplementedException();
+            
         }
                 
         public void Delete(int id)
@@ -28,7 +28,17 @@ namespace DAL.Repository.CsvRepository
 
         public IEnumerable<UserEntity> GetAll()
         {
-            throw new NotImplementedException();
+            var users = new List<UserEntity>();
+
+            using (var reader = new StreamReader(_path))
+            {
+                using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {
+                    users = csvReader.GetRecords<UserEntity>().ToList();
+                }
+            }
+
+            return users;
         }
 
         public UserEntity GetById(int id)
