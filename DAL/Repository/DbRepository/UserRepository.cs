@@ -6,13 +6,19 @@ using System.Data;
 using System.Data.SqlClient;
 
 namespace DAL.Repository.DbRepository
-{    
+{
     public class UserRepository : IRepository<UserEntity, UserEntityChange>
     {
         private string _connectionString;
         public List<UserEntityChange> ChangeHistory { get; set; }
+        private readonly Dictionary<ChangeOperation, Action<UserEntity>> _dict;
         public UserRepository(string connectionString)
         {
+            _dict = new Dictionary<ChangeOperation, Action<UserEntity>>();
+            _dict.Add(ChangeOperation.Insert, Add);
+            _dict.Add(ChangeOperation.Update, Update);
+            _dict.Add(ChangeOperation.Delete, Delete);
+
             _connectionString = connectionString;
         }
         public void Add(UserEntity entity)
@@ -34,7 +40,7 @@ namespace DAL.Repository.DbRepository
             }
         }
 
-        public void Delete(int id)
+        public void Delete(UserEntity user)
         {
             var sqlExpression = "DELETE FROM [User] WHERE ([User].Id) = @id";
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -42,7 +48,7 @@ namespace DAL.Repository.DbRepository
                 connection.Open();
 
                 var command = new SqlCommand(sqlExpression, connection);
-                var idParameter = new SqlParameter("@id", id);
+                var idParameter = new SqlParameter("@id", user.Id);
                 command.Parameters.Add(idParameter);
 
                 command.ExecuteNonQuery();
@@ -101,7 +107,7 @@ namespace DAL.Repository.DbRepository
                         {
                             user.Id = reader.GetInt32(0);
                             user.Name = reader.GetString(1);
-                        }                        
+                        }
                     }
                     else
                     {
@@ -131,29 +137,31 @@ namespace DAL.Repository.DbRepository
         {
             foreach (var change in ChangeHistory)
             {
-                switch (change.Operation)
-                {
-                    case "Insert":
-                        {
-                            Add(change.ChangedObject);
-                        }
-                        break;
+                _dict[change.Operation].Invoke(change.ChangedObject);
 
-                    case "Update":
-                        {
-                            Update(change.ChangedObject);
-                        }
-                        break;
+                //switch (change.Operation)
+                //{
+                //    case "Insert":
+                //        {
+                //            Add(change.ChangedObject);
+                //        }
+                //        break;
 
-                    case "Delete":
-                        {
-                            Delete(change.ChangedObject.Id);
-                        }
-                        break;
+                //    case "Update":
+                //        {
+                //            Update(change.ChangedObject);
+                //        }
+                //        break;
 
-                    default:
-                        break;
-                }
+                //    case "Delete":
+                //        {
+                //            Delete(change.ChangedObject.Id);
+                //        }
+                //        break;
+
+                //    default:
+                //        break;
+                //}
             }
             Dispose();
         }
