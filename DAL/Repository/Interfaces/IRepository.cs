@@ -2,7 +2,6 @@
 {
     public interface IRepository<T, TChange> : IDisposable
     {
-        public List<TChange> ChangeHistory { get; set; }
         public T GetById(int id);
         public IEnumerable<T> GetAll();
         public void Add(T entity);

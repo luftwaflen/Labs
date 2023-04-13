@@ -1,30 +1,41 @@
 ﻿using DAL.Entities;
 using DAL.Repository.Changes;
 using DAL.Repository.Interfaces;
-using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace DAL.Repository.DbRepository
 {
-    public class UserRepository : IRepository<UserEntity, UserEntityChange>
+    public class UserRepository :
+        DataSourceConnector<UserEntity>, IRepository<UserEntity, UserEntityChange>
     {
-        private string _connectionString;
-        public List<UserEntityChange> ChangeHistory { get; set; }
-        private readonly Dictionary<ChangeOperation, Action<UserEntity>> _dict;
+        private readonly string _connectionString;
+        private List<UserEntityChange> _changeHistory;
+        private readonly Dictionary<ChangeOperation, Action<UserEntity>> _changeOperations;
         public UserRepository(string connectionString)
         {
-            _dict = new Dictionary<ChangeOperation, Action<UserEntity>>();
-            _dict.Add(ChangeOperation.Insert, Add);
-            _dict.Add(ChangeOperation.Update, Update);
-            _dict.Add(ChangeOperation.Delete, Delete);
+            _changeHistory = new List<UserEntityChange>();
+
+            _changeOperations = new Dictionary<ChangeOperation, Action<UserEntity>>();
+            _changeOperations.Add(ChangeOperation.Insert, AddToDataSource);
+            _changeOperations.Add(ChangeOperation.Update, UpdateToDataSource);
+            _changeOperations.Add(ChangeOperation.Delete, DeleteFromDataSource);
 
             _connectionString = connectionString;
         }
         public void Add(UserEntity entity)
         {
+            var newChange = new UserEntityChange
+            {
+                Operation = ChangeOperation.Insert,
+                ChangedObject = entity
+            };
+            _changeHistory.Add(newChange);
+        }
+        protected override void AddToDataSource(UserEntity entity)
+        {
             var sqlExpression = "INSERT INTO [User] ([User].Name, [User].Login, [User].Password) VALUES (@name, @login, @password)";
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
@@ -39,22 +50,6 @@ namespace DAL.Repository.DbRepository
                 command.ExecuteNonQuery();
             }
         }
-
-        public void Delete(UserEntity user)
-        {
-            var sqlExpression = "DELETE FROM [User] WHERE ([User].Id) = @id";
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                var command = new SqlCommand(sqlExpression, connection);
-                var idParameter = new SqlParameter("@id", user.Id);
-                command.Parameters.Add(idParameter);
-
-                command.ExecuteNonQuery();
-            }
-        }
-
         public IEnumerable<UserEntity> GetAll()
         {
             var users = new List<UserEntity>();
@@ -63,7 +58,7 @@ namespace DAL.Repository.DbRepository
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand(sqlExpression, connection);
+                var command = new SqlCommand(sqlExpression, connection);
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -85,13 +80,12 @@ namespace DAL.Repository.DbRepository
 
             return users;
         }
-
         public UserEntity GetById(int id)
         {
             var user = new UserEntity();
             var sqlExpression = "SELECT * From [User] WHERE ([User].Id) = @id";
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 var command = new SqlCommand(sqlExpression, connection);
@@ -99,7 +93,7 @@ namespace DAL.Repository.DbRepository
                 var idParameter = new SqlParameter("@id", id);
                 command.Parameters.Add(idParameter);
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (var reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
@@ -118,12 +112,41 @@ namespace DAL.Repository.DbRepository
 
             return user;
         }
-
         public void Update(UserEntity entity)
+        {
+            var newChange = new UserEntityChange
+            {
+                Operation = ChangeOperation.Update,
+                ChangedObject = entity
+            };
+            _changeHistory.Add(newChange);
+        }
+        protected override void UpdateToDataSource(UserEntity entity)
         {
             throw new NotImplementedException();
         }
+        public void Delete(UserEntity entity)
+        {
+            var newChange = new UserEntityChange
+            {
+                Operation = ChangeOperation.Delete,
+                ChangedObject = entity
+            };
+        }
+        protected override void DeleteFromDataSource(UserEntity entity)
+        {
+            var sqlExpression = "DELETE FROM [User] WHERE ([User].Id) = @id";
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
 
+                var command = new SqlCommand(sqlExpression, connection);
+                var idParameter = new SqlParameter("@id", entity.Id);
+                command.Parameters.Add(idParameter);
+
+                command.ExecuteNonQuery();
+            }
+        }
         public void Dispose()
         {
             var connection = new SqlConnection(_connectionString);
@@ -132,36 +155,11 @@ namespace DAL.Repository.DbRepository
                 connection.Close();
             }
         }
-
         public void CommitChanges()
         {
-            foreach (var change in ChangeHistory)
+            foreach (var change in _changeHistory)
             {
-                _dict[change.Operation].Invoke(change.ChangedObject);
-
-                //switch (change.Operation)
-                //{
-                //    case "Insert":
-                //        {
-                //            Add(change.ChangedObject);
-                //        }
-                //        break;
-
-                //    case "Update":
-                //        {
-                //            Update(change.ChangedObject);
-                //        }
-                //        break;
-
-                //    case "Delete":
-                //        {
-                //            Delete(change.ChangedObject.Id);
-                //        }
-                //        break;
-
-                //    default:
-                //        break;
-                //}
+                _changeOperations[change.Operation].Invoke(change.ChangedObject);
             }
             Dispose();
         }

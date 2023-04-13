@@ -5,7 +5,7 @@ namespace DAL.Repository.Changes
 {
     public class TaskEntityChange : IChangeNote<TaskEntity>
     {
-        public string Operation { get; set; }
+        public ChangeOperation Operation { get; set; }
         public TaskEntity OriginObject { get; set; }
         public TaskEntity ChangedObject { get; set; }
     }

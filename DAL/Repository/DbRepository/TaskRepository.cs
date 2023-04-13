@@ -6,65 +6,67 @@ using TaskEntity = DAL.Entities.TaskEntity;
 
 namespace DAL.Repository.DbRepository
 {
-    public class TaskRepository : IRepository<TaskEntity, TaskEntityChange>
+    public class TaskRepository :
+        DataSourceConnector<TaskEntity>, IRepository<TaskEntity, TaskEntityChange>
     {
-        private string _connectionString;
-        public List<TaskEntityChange> ChangeHistory { get; set; }
+        private readonly string _connectionString;
+        private List<TaskEntityChange> _changeHistory;
+        private readonly Dictionary<ChangeOperation, Action<TaskEntity>> _changeOperations;
         public TaskRepository(string connectionString)
         {
+            _changeHistory = new List<TaskEntityChange>();
+
+            _changeOperations = new Dictionary<ChangeOperation, Action<TaskEntity>>();
+            _changeOperations.Add(ChangeOperation.Insert, AddToDataSource);
+            _changeOperations.Add(ChangeOperation.Update, UpdateToDataSource);
+            _changeOperations.Add(ChangeOperation.Delete, DeleteFromDataSource);
+
             _connectionString = connectionString;
         }
         public void Add(TaskEntity entity)
         {
-            string sqlExpression = "INSERT INTO Task (Task.Name, Task.Description) VALUES (@name, @description)";
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            var newChange = new TaskEntityChange
+            {
+                Operation = ChangeOperation.Insert,
+                ChangedObject = entity
+            };
+            _changeHistory.Add(newChange);
+        }
+        protected override void AddToDataSource(TaskEntity entity)
+        {
+            var sqlExpression = "INSERT INTO Task (Task.Name, Task.Description) VALUES (@name, @description)";
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand(sqlExpression, connection);
-                SqlParameter nameParameter = new SqlParameter("@name", entity.Name);
-                SqlParameter descriptionParameter = new SqlParameter("@description", entity.Description);
+                var command = new SqlCommand(sqlExpression, connection);
+                var nameParameter = new SqlParameter("@name", entity.Name);
+                var descriptionParameter = new SqlParameter("@description", entity.Description);
                 command.Parameters.Add(nameParameter);
                 command.Parameters.Add(descriptionParameter);
 
                 command.ExecuteNonQuery();
             }
         }
-
-        public void Delete(int id)
-        {
-            string sqlExpression = "DELETE FROM Task WHERE (Task.Id) = @id";
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                SqlCommand command = new SqlCommand(sqlExpression, connection);
-                SqlParameter idParameter = new SqlParameter("@id", id);
-                command.Parameters.Add(idParameter);
-
-                command.ExecuteNonQuery();
-            }
-        }
-
         public IEnumerable<TaskEntity> GetAll()
         {
-            List<TaskEntity> tasks = new List<TaskEntity>();
-            string sqlExpression = "SELECT * From Task";
+            var tasks = new List<TaskEntity>();
+            var sqlExpression = "SELECT * From Task";
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand(sqlExpression, connection);
+                var command = new SqlCommand(sqlExpression, connection);
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (var reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            int id = reader.GetInt32(0);
-                            string name = reader.GetString(1);
-                            string description = reader.GetString(2);
+                            var id = reader.GetInt32(0);
+                            var name = reader.GetString(1);
+                            var description = reader.GetString(2);
                             tasks.Add(new TaskEntity
                             {
                                 Id = id,
@@ -78,21 +80,20 @@ namespace DAL.Repository.DbRepository
 
             return tasks;
         }
-
         public TaskEntity GetById(int id)
         {
-            TaskEntity task = new TaskEntity();
-            string sqlExpression = "SELECT * From Task WHERE (Task.Id) = @id";
+            var task = new TaskEntity();
+            var sqlExpression = "SELECT * From Task WHERE (Task.Id) = @id";
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand(sqlExpression, connection);
+                var command = new SqlCommand(sqlExpression, connection);
 
-                SqlParameter idParameter = new SqlParameter("@id", id);
+                var idParameter = new SqlParameter("@id", id);
                 command.Parameters.Add(idParameter);
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (var reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
@@ -109,48 +110,55 @@ namespace DAL.Repository.DbRepository
 
             return task;
         }
-
         public void Update(TaskEntity entity)
         {
-            throw new NotImplementedException();
+            var newChange = new TaskEntityChange
+            {
+                Operation = ChangeOperation.Update,
+                ChangedObject = entity
+            };
+            _changeHistory.Add(newChange);
         }
+        protected override void UpdateToDataSource(TaskEntity entity)
+        {
+            
+        }
+        public void Delete(TaskEntity entity)
+        {
+            var newChange = new TaskEntityChange
+            {
+                Operation = ChangeOperation.Delete,
+                ChangedObject = entity
+            };
+            _changeHistory.Add(newChange);
+        }
+        protected override void DeleteFromDataSource(TaskEntity entity)
+        {
+            var sqlExpression = "DELETE FROM Task WHERE (Task.Id) = @id";
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
 
+                var command = new SqlCommand(sqlExpression, connection);
+                var idParameter = new SqlParameter("@id", entity.Id);
+                command.Parameters.Add(idParameter);
+
+                command.ExecuteNonQuery();
+            }
+        }
         public void Dispose()
         {
-            SqlConnection connection = new SqlConnection(_connectionString);
+            var connection = new SqlConnection(_connectionString);
             if (connection.State == ConnectionState.Open)
             {
                 connection.Close();
             }
         }
-
         public void CommitChanges()
         {
-            foreach (var change in ChangeHistory)
+            foreach (var change in _changeHistory)
             {
-                switch (change.Operation)
-                {
-                    case "Insert":
-                        {
-                            Add(change.ChangedObject);
-                        }
-                        break;
-
-                    case "Update":
-                        {
-                            Update(change.ChangedObject);
-                        }
-                        break;
-
-                    case "Delete":
-                        {
-                            Delete(change.ChangedObject.Id);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
+                _changeOperations[change.Operation].Invoke(change.ChangedObject);
             }
             Dispose();
         }

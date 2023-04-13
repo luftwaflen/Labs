@@ -6,26 +6,27 @@ using System.Globalization;
 
 namespace DAL.Repository.CsvRepository
 {
-    public class UserCsvRepository : IRepository<UserEntity, UserEntityChange>
+    public class UserCsvRepository :
+        DataSourceConnector<UserEntity>, IRepository<UserEntity, UserEntityChange>
     {
-        private string _path = "";
+        private readonly string _path;
+        private List<UserEntityChange> _changeHistory { get; set; }
+        private readonly Dictionary<ChangeOperation, Action<UserEntity>> _changeOperations;
         public UserCsvRepository(string path)
         {
+            _changeHistory = new List<UserEntityChange>();
+
+            _changeOperations = new Dictionary<ChangeOperation, Action<UserEntity>>();
+            _changeOperations.Add(ChangeOperation.Insert, AddToDataSource);
+            _changeOperations.Add(ChangeOperation.Update, UpdateToDataSource);
+            _changeOperations.Add(ChangeOperation.Delete, DeleteFromDataSource);
+
             _path = path;
         }
-
-        public List<UserEntityChange> ChangeHistory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         public void Add(UserEntity entity)
         {
             
         }
-                
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<UserEntity> GetAll()
         {
             var users = new List<UserEntity>();
@@ -57,6 +58,26 @@ namespace DAL.Repository.CsvRepository
         }
 
         public void CommitChanges()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void AddToDataSource(UserEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void UpdateToDataSource(UserEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void DeleteFromDataSource(UserEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(UserEntity entity)
         {
             throw new NotImplementedException();
         }
