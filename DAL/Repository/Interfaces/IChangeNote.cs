@@ -1,10 +1,15 @@
 ﻿namespace DAL.Repository.Interfaces
 {
+    public enum ChangeOperation
+    {
+        Insert,
+        Update,
+        Delete
+    }
     public interface IChangeNote<T>
     {
-        public string Operation { get; set; }
+        public ChangeOperation Operation { get; set; }
         public T OriginObject { get; set; }
         public T ChangedObject { get; set; }
-        public void ExecuteOperation();
     }
 }

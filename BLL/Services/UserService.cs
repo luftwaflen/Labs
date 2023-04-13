@@ -50,6 +50,9 @@ namespace BLL.Services
             };
             user.Name = name;
 
+            //Историю записывать в репозитории, в бд сохранять методом commit
+            _repository.Update(user);
+
             _changeHistory.Add(new UserEntityChange
             {
                 Operation = "Update",

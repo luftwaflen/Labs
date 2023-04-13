@@ -7,7 +7,7 @@
         public IEnumerable<T> GetAll();
         public void Add(T entity);
         public void Update(T entity);
-        public void Delete(int id);
+        public void Delete(T entity);
         public void CommitChanges();
     }
 }
